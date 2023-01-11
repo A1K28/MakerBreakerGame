@@ -8,25 +8,24 @@ def decompose_edges_by_len(edges):
     return decomposed_edges
 
 
-if __name__ == '__main__':
-    test_hypergraph = {
-        'nodes': ['a', 'b', 'c', 'd', 'e', 'f'],
-        'edges': [
-            ('a', 'b'),
-            ('b', 'c'),
-            ('c', 'd'),
-            ('a', 'c'),
-            ('b', 'f'),
-            ('f', 'c'),
-            ('e', 'f'),
-            ('a', 'e'),
-            ('b', 'd'),
-            ('a', 'c', 'd'),
-            ('a', 'b', 'e'),
-            ('a', 'b', 'd'),
-            ('a', 'b', 'c', 'd')
-        ]
-    }
+test_hypergraph = {
+    'nodes': ['a', 'b', 'c', 'd', 'e', 'f'],
+    'edges': [
+        ('a', 'b'),
+        ('b', 'c'),
+        ('c', 'd'),
+        ('a', 'c'),
+        ('b', 'f'),
+        ('f', 'c'),
+        ('e', 'f'),
+        ('a', 'e'),
+        ('b', 'd'),
+        ('a', 'c', 'd'),
+        ('a', 'b', 'e'),
+        ('a', 'b', 'd'),
+        ('a', 'b', 'c', 'd')
+    ]
+}
 
 
 # class Hypergraph:
