@@ -10,6 +10,10 @@ def offset(dist: float) -> float:
     return 2.5 / 28 * dist + 10./7
 
 
+def hypotenuse(x: float, y: float) -> float:
+    return math.sqrt(x**2+y**2)
+
+
 def distance(p1: Point2D, p2: Point2D) -> float:
     """Find distance between two points on an Euclidian plane"""
     return math.sqrt(abs(p1.x - p2.x) ** 2 + abs(p1.y - p2.y) ** 2)
@@ -72,8 +76,8 @@ def get_distributed_points(width: int, height: int, block_size: int, n_points: i
     constraint_y = grid_height
     center_x = constraint_x*1./2*block_size
     center_y = constraint_y*1./2*block_size
-    x_diff = width*1./2 - center_x
-    y_diff = height*1./2 - center_y
+    # x_diff = width*1./2 - center_x
+    # y_diff = height*1./2 - center_y
     # arcade.draw_xywh_rectangle_outline(0, 0, constraint_x * self.node_width, constraint_y * self.node_width,
     #                                    arcade.csscolor.BLACK)
     # arcade.draw_xywh_rectangle_outline(self.width * 1. / 2 - center_x,

@@ -15,8 +15,10 @@ class MakerBreakerGame(arcade.Window):
 
         self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.mouse_bound_object: MovableObject | None = None
+        self.hover_bound_object: MovableObject | None = None
 
         self.setup()
+
 
     def setup(self):
         arcade.set_background_color(Constants.DARK_BLUE_COLOR)
@@ -31,8 +33,22 @@ class MakerBreakerGame(arcade.Window):
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Called when the mouse moves."""
+        # handle mouse bound object
         if self.mouse_bound_object is not None:
             self.mouse_bound_object.update(x, y)
+
+        # handle on-hover
+        node = self.hypergraph.find_closest_node(x, y)
+        if self.hover_bound_object is not None:
+            self.hover_bound_object.color = self.hover_bound_object.default_color
+            for edge in self.hypergraph.get_edges(self.hover_bound_object):
+                edge.color = edge.default_color
+
+        if node is not None:
+            self.hover_bound_object = node
+            self.hover_bound_object.color = arcade.csscolor.ROYAL_BLUE
+            for edge in self.hypergraph.get_edges(self.hover_bound_object):
+                edge.color = arcade.csscolor.VIOLET
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Called when the mouse is pressed"""

@@ -7,10 +7,12 @@ from app.game.engine.utils import diff
 
 
 class Node(MovableObject):
-    def __init__(self, point: Point2D, tag: str, radius: float, font_size: int):
+    def __init__(self, point: Point2D, tag: str, radius: float, color: arcade.csscolor, font_size: int):
         # self.point = point
         self.tag = tag
         self.radius = radius
+        self.color = color
+        self.default_color = color
         self.font_size = font_size
 
         self.is_selected: bool = False
@@ -31,8 +33,9 @@ class Node(MovableObject):
         """Draw the object to screen"""
         if len(self.tag) > 2:
             raise ValueError(f"Tag ({self.tag}) length is greater than 2")
-        arcade.draw_circle_filled(self.point_x, self.point_y, self.radius, arcade.csscolor.ORANGE)
-        arcade.draw_text(self.tag, self.text_x, self.text_y, font_size=self.font_size, color=arcade.csscolor.BLACK)
+        arcade.draw_circle_filled(self.point_x, self.point_y, self.radius, Constants.DARK_BLUE_COLOR)
+        arcade.draw_circle_filled(self.point_x, self.point_y, self.radius-3, self.color)
+        # arcade.draw_text(self.tag, self.text_x, self.text_y, font_size=self.font_size, color=arcade.csscolor.BLACK)
 
     def select(self):
         """Selects an object"""
