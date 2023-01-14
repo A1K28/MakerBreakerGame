@@ -10,12 +10,10 @@ from app.game.engine.interface import MovableObject
 
 
 class MakerBreakerGame(arcade.Window):
-    def __init__(self, width=1280, height=720, node_radius=12, font_size=10):
-        super().__init__(width, height, title="Maker Breaker Game")
-        self.width = width
-        self.height = height
+    def __init__(self, node_radius=12, font_size=10):
+        super().__init__(Constants.WIDTH, Constants.HEIGHT, title="Maker Breaker Game")
 
-        self.hypergraph = HyperGraph(width, height, node_radius, font_size)
+        self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.mouse_bound_object: MovableObject | None = None
 
         self.setup()
@@ -26,23 +24,10 @@ class MakerBreakerGame(arcade.Window):
         # self.hypergraph.pre_self_adjust()
 
     def on_draw(self):
-        # pass
         arcade.start_render()
-
         self.hypergraph.draw_graph()
         self.hypergraph.self_adjust()
-        # arcade.draw_circle_filled(self.x, self.y, 25, arcade.color.GREEN)
-        # arcade.set_background_color(Constants.DARK_BLUE_COLOR)
-
-        # arcade.open_window(self.width, self.height, "Maker Breaker Game")
-
-        # arcade.start_render()
-
-        # self.draw_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
-
-        # arcade.finish_render()
-
-        # arcade.run()
+        self.hypergraph.self_center()
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Called when the mouse moves."""
@@ -56,7 +41,9 @@ class MakerBreakerGame(arcade.Window):
                 node = self.hypergraph.find_closest_node(x, y)
                 if node is not None:
                     self.mouse_bound_object = node
+                    self.mouse_bound_object.select()
             else:
+                self.mouse_bound_object.deselect()
                 self.mouse_bound_object = None
 
     # def on_mouse_release(self, x, y, button, modifiers):

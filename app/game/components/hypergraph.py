@@ -1,6 +1,8 @@
 import math
 from typing import List
 
+import arcade
+
 from app.game.components.hyperedge import HyperEdge
 from app.game.components.node import Node
 from app.game.config.constants import Constants
@@ -63,6 +65,41 @@ class HyperGraph:
          as Described at https://en.wikipedia.org/wiki/Force-directed_graph_drawing"""
         self._apply_hooke_on_edges()
         self._apply_coulomb_on_nodes()
+
+    def self_center(self):
+        x, y, w, h = self._get_rectangle_xywh_containing_all_nodes()
+        arcade.draw_xywh_rectangle_outline(x, y, w, h, arcade.csscolor.ORANGE)
+
+    def _get_rectangle_xywh_containing_all_nodes(self) -> (float, float, float, float):
+        # defined vars
+        outer_left = Constants.WIDTH
+        outer_right = 0
+        outer_bottom = Constants.HEIGHT
+        outer_top = 0
+
+        # find minimums and maximums
+        for node in self.nodes:
+            if node.point_x < outer_left:
+                outer_left = node.point_x
+            if node.point_x > outer_right:
+                outer_right = node.point_x
+            if node.point_y < outer_bottom:
+                outer_bottom = node.point_y
+            if node.point_y > outer_top:
+                outer_top = node.point_y
+
+        # heads up! trying to be careful
+        if outer_right == outer_right:
+            outer_left -= self.node_radius
+            outer_right += self.node_radius
+        if outer_top == outer_bottom:
+            outer_bottom -= self.node_radius
+            outer_top += self.node_radius
+
+        # return x, y from the bottom left, along with width and height
+        x, y = outer_left-self.node_radius, outer_bottom-self.node_radius
+        w, h = outer_right-outer_left+2*self.node_radius, outer_top-outer_bottom+2*self.node_radius
+        return x, y, w, h
 
     def _apply_hooke_on_edges(self):
         for edge in self.edges:
