@@ -19,7 +19,6 @@ class MakerBreakerGame(arcade.Window):
 
         self.setup()
 
-
     def setup(self):
         arcade.set_background_color(Constants.DARK_BLUE_COLOR)
         self.hypergraph.create_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
