@@ -68,7 +68,6 @@ def get_distributed_points(width: int, height: int, block_size: int, n_points: i
     center_y = constraint_y*1./2*block_size
     x_diff = width*1./2 - center_x
     y_diff = height*1./2 - center_y
-    print(x_diff, y_diff)
     # arcade.draw_xywh_rectangle_outline(0, 0, constraint_x * self.node_width, constraint_y * self.node_width,
     #                                    arcade.csscolor.BLACK)
     # arcade.draw_xywh_rectangle_outline(self.width * 1. / 2 - center_x,
@@ -77,7 +76,6 @@ def get_distributed_points(width: int, height: int, block_size: int, n_points: i
     #                                    constraint_y * self.node_width,
     #                                    arcade.csscolor.BLACK)
     random_points_1d = random.sample(range(0, constraint_x * constraint_y), n_points)
-    print(random_points_1d)
     random_points = [Point2D(e % constraint_x * 1. * block_size + width * 1. / 2 - center_x,
                              e / constraint_x * 1. * block_size + height * 1. / 2 - center_y)
                      for e in random_points_1d]
