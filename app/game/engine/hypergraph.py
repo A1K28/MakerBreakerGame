@@ -1,4 +1,4 @@
-test_hypergraph = {
+test_hypergraph2 = {
     'nodes': ['a', 'b', 'c', 'd', 'e', 'f'],
     'edges': [
         ('a', 'b'),
@@ -16,3 +16,14 @@ test_hypergraph = {
         ('a', 'b', 'c', 'd')
     ]
 }
+
+test_hypergraph = {
+    'nodes': ['a', 'b', 'c'],
+    'edges': [
+        ('a', 'b'),
+        ('b', 'c'),
+        ('a', 'c'),
+        ('a', 'b', 'c')
+    ]
+}
+

@@ -1,5 +1,4 @@
 import math
-import random
 from typing import List
 
 import arcade
@@ -7,54 +6,38 @@ import arcade
 from app.game.components.edge import Edge
 from app.game.components.node import Node
 from app.game.config.constants import Constants
-from app.game.config.types import Point2D
 from app.game.engine.hypergraph import test_hypergraph
+from app.game.engine.types import Point2D
+from app.game.engine.utils import get_distributed_points
 
 
-class MakerBreakerGame:
+class MakerBreakerGame(arcade.Window):
     def __init__(self, width=1280, height=720, node_radius=12, font_size=10):
+        super().__init__(width, height, title="Maker Breaker Game")
+
         self.width = width
         self.height = height
         self.node_radius = node_radius
         self.font_size = font_size
-
-        self.node_width = node_radius * 2 + 3
-        self.grid_width = math.floor(width / self.node_width)
-        self.grid_height = math.floor(height / self.node_width)
-        self.grid_visited = [[0] * self.grid_height] * self.grid_width
+        # self.grid_visited = [[0] * self.grid_height] * self.grid_width
 
         self.nodes: List[Node] = []
         self.edges: List[Edge] = []
 
-    def get_grid_coords(self, p: Point2D) -> (int, int):
-        return math.ceil(p.x / self.node_width), math.ceil(p.y / self.node_width)
+        self.setup()
 
-    def get_distributed_points(self, n_points: int):
-        # generate unique grid coords
-        constraint_x = 25
-        constraint_y = 16
-        center_x = constraint_x*1./2*self.node_width
-        center_y = constraint_y*1./2*self.node_width
-        x_diff = self.width*1./2 - center_x
-        y_diff = self.height*1./2 - center_y
-        print(x_diff, y_diff)
-        # arcade.draw_xywh_rectangle_outline(0, 0, constraint_x * self.node_width, constraint_y * self.node_width,
-        #                                    arcade.csscolor.BLACK)
-        # arcade.draw_xywh_rectangle_outline(self.width * 1. / 2 - center_x,
-        #                                    self.height * 1. / 2 - center_y,
-        #                                    constraint_x * self.node_width,
-        #                                    constraint_y * self.node_width,
-        #                                    arcade.csscolor.BLACK)
-        random_points_1d = random.sample(range(0, constraint_x * constraint_y), n_points)
-        print(random_points_1d)
-        random_points = [Point2D(e % constraint_x * 1. * self.node_width + self.width * 1. / 2 - center_x,
-                                 e / constraint_x * 1. * self.node_width + self.height * 1. / 2 - center_y)
-                         for e in random_points_1d]
-        return random_points
+    def setup(self):
+        arcade.set_background_color(Constants.DARK_BLUE_COLOR)
+        self.create_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
 
-    def draw_graph(self, nodes, edges):
+    def create_graph(self, nodes, edges):
+        # get random unique node points
+        node_width = self.node_radius * 2 + 3
+        grid_width = math.floor(self.width / node_width)
+        grid_height = math.floor(self.height / node_width)
+        node_points = get_distributed_points(self.width, self.height, node_width, len(nodes))
+
         # create nodes
-        node_points = self.get_distributed_points(len(nodes))
         for np, tag in zip(node_points, nodes):
             self.create_node(np, tag)
 
@@ -63,37 +46,55 @@ class MakerBreakerGame:
             nodes = [e for e in self.nodes if e.tag in edge]
             self.create_edge(nodes)
 
+    def draw_graph(self):
         # draw edges
         for edge in self.edges:
-            edge.draw(self.node_radius)
+            edge.draw()
 
         # draw nodes
         for node in self.nodes:
             node.draw()
 
     def create_edge(self, nodes: List[Node]):
-        points = [e.point for e in nodes]
-        edge = Edge(points)
+        points = [Point2D(e.point_x, e.point_y) for e in nodes]
+        edge = Edge(points, self.node_radius)
         self.edges.append(edge)
 
     def create_node(self, point, tag):
         node = Node(point, tag, self.node_radius, self.font_size)
         self.nodes.append(node)
 
-    def run(self):
-        arcade.open_window(self.width, self.height, "Maker Breaker Game")
-
-        arcade.set_background_color(Constants.DARK_BLUE_COLOR)
-
+    def on_draw(self):
+        # pass
         arcade.start_render()
 
-        self.draw_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
+        self.draw_graph()
+        # arcade.draw_circle_filled(self.x, self.y, 25, arcade.color.GREEN)
+        # arcade.set_background_color(Constants.DARK_BLUE_COLOR)
 
-        arcade.finish_render()
+        # arcade.open_window(self.width, self.height, "Maker Breaker Game")
 
-        arcade.run()
+        # arcade.start_render()
+
+        # self.draw_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
+
+        # arcade.finish_render()
+
+        # arcade.run()
+
+    # Creating function to check the position
+    # of the mouse
+    def on_mouse_motion(self, x, y, dx, dy):
+        """
+        Called whenever the mouse moves.
+        """
+        self.nodes[0].update(x, y)
+
+    # Creating function to check the mouse clicks
+    def on_mouse_press(self, x, y, button, modifiers):
+        print("Mouse button is pressed")
 
 
 if __name__ == '__main__':
     game = MakerBreakerGame()
-    game.run()
+    arcade.run()
