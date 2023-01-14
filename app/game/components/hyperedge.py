@@ -31,8 +31,8 @@ class HyperEdge:
                 mid = midpoint(mid, self.nodes[i].to_point())
             for node in self.nodes:
                 self._draw2d(node.to_point(), mid, self.color)
-            self.star = Star(mid.x, mid.y, 6)
-            self.star.draw(self.node_radius)
+            self.star = Star(mid.x, mid.y, self.node_radius, 6)
+            self.star.draw()
 
     @staticmethod
     def _draw2d(p0: Point2D, p2: Point2D, color=arcade.csscolor.WHITE, width=2):

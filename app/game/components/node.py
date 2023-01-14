@@ -1,12 +1,12 @@
 import arcade
 
 from app.game.config.constants import Constants
-from app.game.engine.interface import MovableObject
+from app.game.engine.interface import MovableObject, PhysicsObject, SelectableObject
 from app.game.engine.types import Point2D
 from app.game.engine.utils import diff
 
 
-class Node(MovableObject):
+class Node(MovableObject, SelectableObject, PhysicsObject):
     def __init__(self, point: Point2D, tag: str, radius: float, color: arcade.csscolor, font_size: int):
         # self.point = point
         self.tag = tag
@@ -25,9 +25,6 @@ class Node(MovableObject):
         if len(self.tag) == 2:
             self.font_size -= 2
             self.text_x -= 2
-
-    def to_point(self) -> Point2D:
-        return Point2D(self.point_x, self.point_y)
 
     def draw(self):
         """Draw the object to screen"""
@@ -52,6 +49,9 @@ class Node(MovableObject):
 
         self._apply_force_on_point(circle_diff_x, circle_diff_y, True)
         self._apply_force_on_text(text_diff_x, text_diff_y, True)
+
+    def to_point(self) -> Point2D:
+        return Point2D(self.point_x, self.point_y)
 
     def apply_force(self, f_x: float, f_y: float):
         self._apply_force_on_point(f_x, f_y)

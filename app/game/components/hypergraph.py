@@ -6,6 +6,7 @@ import arcade
 from app.game.components.hyperedge import HyperEdge
 from app.game.components.node import Node
 from app.game.config.constants import Constants
+from app.game.engine.interface import PhysicsObject
 from app.game.engine.types import Point2D
 from app.game.engine.utils import get_distributed_points, distance, coulomb_attract, diff, hypotenuse
 
@@ -58,7 +59,7 @@ class HyperGraph:
         """Use a Force-Directed graph drawing algorithm, used for visualisation purposes.
          as Described at https://en.wikipedia.org/wiki/Force-directed_graph_drawing"""
         self._apply_hooke_on_edges()
-        self._apply_coulomb_on_nodes()
+        self._apply_coulomb_on_nodes_and_stars()
 
     def self_center(self):
         x, y, w, h = self._get_rectangle_xywh_containing_all_nodes()
@@ -134,17 +135,18 @@ class HyperGraph:
         for edge in self.edges:
             edge.update_with_hooke()
 
-    def _apply_coulomb_on_nodes(self):
-        for i in range(len(self.nodes)):
-            for j in range(len(self.nodes)):
+    def _apply_coulomb_on_nodes_and_stars(self):
+        elements: List[PhysicsObject] = self.nodes
+        for i in range(len(elements)):
+            for j in range(len(elements)):
                 if i == j:
                     continue
-                dist = distance(self.nodes[i].to_point(), self.nodes[j].to_point())
+                dist = distance(elements[i].to_point(), elements[j].to_point())
                 if dist == 0:
                     dist = self.node_radius
                 force = coulomb_attract(dist)
-                dx, dy = diff(self.nodes[i].point_x, self.nodes[i].point_y,
-                              self.nodes[j].point_x, self.nodes[j].point_y)
+                dx, dy = diff(elements[i].point_x, elements[i].point_y,
+                              elements[j].point_x, elements[j].point_y)
                 unit_x, unit_y = dx*1./dist, dy*1./dist
                 dx, dy = unit_x*force, unit_y*force
-                self.nodes[i].apply_force(-dx, -dy)
+                elements[i].apply_force(-dx, -dy)

@@ -5,8 +5,8 @@ import arcade
 
 from app.game.components.hypergraph import HyperGraph
 from app.game.config.constants import Constants
-from app.game.engine.hypergraph import test_hypergraph
-from app.game.engine.interface import MovableObject
+from app.game.engine.data import test_hypergraph
+from app.game.engine.interface import MovableObject, SelectableObject
 
 
 class MakerBreakerGame(arcade.Window):
@@ -15,7 +15,7 @@ class MakerBreakerGame(arcade.Window):
 
         self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.mouse_bound_object: MovableObject | None = None
-        self.hover_bound_object: MovableObject | None = None
+        self.hover_bound_object: SelectableObject | None = None
 
         self.setup()
 
