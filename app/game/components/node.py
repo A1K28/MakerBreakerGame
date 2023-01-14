@@ -21,6 +21,9 @@ class Node(MovableObject):
             self.font_size -= 2
             self.text_x -= 2
 
+    def to_point(self) -> Point2D:
+        return Point2D(self.point_x, self.point_y)
+
     def draw(self):
         """Draw the object to screen"""
         if len(self.tag) > 2:
