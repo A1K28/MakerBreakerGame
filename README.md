@@ -9,3 +9,6 @@ is applied to the graph for it to visually self-adjust.
 <br/>
 The Force-directed algorithm works by using the Hooke's law for attracting the nodes at the endpoints of each edge, 
 and using Coulomb's law for repelling nodes on the screen.
+<br/>
+<br/>
+Additionally, the edges are drawn by using [Bézier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve).
