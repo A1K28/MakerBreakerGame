@@ -2,6 +2,7 @@ import math
 import random
 from typing import List
 
+from app.game.config.constants import Constants
 from app.game.engine.types import Point2D
 
 
@@ -27,6 +28,11 @@ def midpoint(p1: Point2D, p2: Point2D) -> Point2D:
 def diff(old_x: float, old_y: float, new_x: float, new_y: float) -> (float, float):
     """Find difference vector between two points on an Euclidian plane"""
     return new_x-old_x, new_y-old_y
+
+
+def coulomb_attract(dist: float) -> float:
+    """Finds the Coulomb forces acting on an object: |F| = (K * |q1| * |q2|) / (r^2)"""
+    return Constants.COULOMB_K * (Constants.COULOMB_Q ** 2) / (dist ** 2)
 
 
 def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_precision=128) -> List[Point2D]:

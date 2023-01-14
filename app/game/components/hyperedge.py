@@ -4,6 +4,7 @@ import arcade
 
 from app.game.components.node import Node
 from app.game.components.star_expansion import Star
+from app.game.config.constants import Constants
 from app.game.engine.types import Point2D
 from app.game.engine.utils import distance, offset, midpoint, get_quadratic_bezier_points, diff
 
@@ -12,6 +13,9 @@ class HyperEdge:
     def __init__(self, nodes: List[Node], node_radius):
         self.nodes = nodes
         self.node_radius = node_radius
+
+        # star expansion (for edges with more than 2 endpoints)
+        self.star: Star | None = None
 
     def draw(self):
         if self.nodes is None or len(self.nodes) < 2:
@@ -25,8 +29,8 @@ class HyperEdge:
                 mid = midpoint(mid, self.nodes[i].to_point())
             for node in self.nodes:
                 self._draw2d(node.to_point(), mid)
-            star = Star(mid.x, mid.y, 6)
-            star.draw(self.node_radius)
+            self.star = Star(mid.x, mid.y, 6)
+            self.star.draw(self.node_radius)
 
     @staticmethod
     def _draw2d(p0: Point2D, p2: Point2D, color=arcade.csscolor.WHITE, width=2):
@@ -36,3 +40,15 @@ class HyperEdge:
         p1 = Point2D(mid.x + off, mid.y + off)
         points = get_quadratic_bezier_points(p0, p1, p2)
         arcade.draw_commands.draw_line_strip(points, color, width)
+
+    def update_with_hooke(self):
+        for i in range(len(self.nodes)):
+            for j in range(len(self.nodes)):
+                if i == j:
+                    continue
+                dx, dy = diff(self.nodes[i].point_x, self.nodes[i].point_y,
+                              self.nodes[j].point_x, self.nodes[j].point_y)
+
+                # F = kx
+                force_x, force_y = Constants.HOOKE_K * dx, Constants.HOOKE_K * dy
+                self.nodes[i].apply_force(force_x, force_y)

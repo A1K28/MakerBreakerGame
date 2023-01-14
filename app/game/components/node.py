@@ -40,3 +40,9 @@ class Node(MovableObject):
         self.point_y += circle_diff_y
         self.text_x += text_diff_x
         self.text_y += text_diff_y
+
+    def apply_force(self, f_x: float, f_y: float):
+        self.point_x += f_x
+        self.point_y += f_y
+        self.text_x += f_x
+        self.text_y += f_y

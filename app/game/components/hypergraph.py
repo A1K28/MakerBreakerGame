@@ -5,7 +5,7 @@ from app.game.components.hyperedge import HyperEdge
 from app.game.components.node import Node
 from app.game.config.constants import Constants
 from app.game.engine.types import Point2D
-from app.game.engine.utils import get_distributed_points, distance
+from app.game.engine.utils import get_distributed_points, distance, coulomb_attract, diff
 
 
 class HyperGraph:
@@ -52,7 +52,36 @@ class HyperGraph:
         for node in self.nodes:
             node.draw()
 
-    def find_closest_node(self, x, y, threshold=10) -> Node | None:
+    def pre_self_adjust(self):
+        """Use a Force-Directed graph drawing algorithm,
+         as Described at https://en.wikipedia.org/wiki/Force-directed_graph_drawing"""
+        for i in range(int(1e4)):
+            self.self_adjust()
+
+    def self_adjust(self):
+        """Use a Force-Directed graph drawing algorithm, used for visualisation purposes.
+         as Described at https://en.wikipedia.org/wiki/Force-directed_graph_drawing"""
+        self._apply_hooke_on_edges()
+        self._apply_coulomb_on_nodes()
+
+    def _apply_hooke_on_edges(self):
+        for edge in self.edges:
+            edge.update_with_hooke()
+
+    def _apply_coulomb_on_nodes(self):
+        for i in range(len(self.nodes)):
+            for j in range(len(self.nodes)):
+                if i == j:
+                    continue
+                dist = distance(self.nodes[i].to_point(), self.nodes[j].to_point())
+                force = coulomb_attract(dist)
+                dx, dy = diff(self.nodes[i].point_x, self.nodes[i].point_y,
+                              self.nodes[j].point_x, self.nodes[j].point_y)
+                unit_x, unit_y = dx*1./dist, dy*1./dist
+                dx, dy = unit_x*force, unit_y*force
+                self.nodes[i].apply_force(-dx, -dy)
+
+    def find_closest_node(self, x, y, threshold=30) -> Node | None:
         """Find the closes node that is not further than threshold (in pixels) from the given coordinates"""
         n = None
         dist = Constants.INFINITY

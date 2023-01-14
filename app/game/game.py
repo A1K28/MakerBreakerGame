@@ -23,12 +23,14 @@ class MakerBreakerGame(arcade.Window):
     def setup(self):
         arcade.set_background_color(Constants.DARK_BLUE_COLOR)
         self.hypergraph.create_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
+        # self.hypergraph.pre_self_adjust()
 
     def on_draw(self):
         # pass
         arcade.start_render()
 
         self.hypergraph.draw_graph()
+        self.hypergraph.self_adjust()
         # arcade.draw_circle_filled(self.x, self.y, 25, arcade.color.GREEN)
         # arcade.set_background_color(Constants.DARK_BLUE_COLOR)
 
@@ -42,18 +44,21 @@ class MakerBreakerGame(arcade.Window):
 
         # arcade.run()
 
-    # def on_mouse_motion(self, x, y, dx, dy):
-    #     """Called when the mouse moves."""
-    #     if self.mouse_bound_object is not None:
-    #         self.mouse_bound_object.update(x, y)
-    #
-    # def on_mouse_press(self, x, y, button, modifiers):
-    #     """Called when the mouse is pressed"""
-    #     if button == 1:
-    #         node = self.hypergraph.find_closest_node(x, y)
-    #         if node is not None:
-    #             self.mouse_bound_object = node
-    #
+    def on_mouse_motion(self, x, y, dx, dy):
+        """Called when the mouse moves."""
+        if self.mouse_bound_object is not None:
+            self.mouse_bound_object.update(x, y)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """Called when the mouse is pressed"""
+        if button == 4:
+            if self.mouse_bound_object is None:
+                node = self.hypergraph.find_closest_node(x, y)
+                if node is not None:
+                    self.mouse_bound_object = node
+            else:
+                self.mouse_bound_object = None
+
     # def on_mouse_release(self, x, y, button, modifiers):
     #     """Called when the mouse is released"""
     #     if button == 1:
