@@ -5,7 +5,7 @@ import arcade
 from app.game.components.star_expansion import Star
 from app.game.engine.interface import MovableObject
 from app.game.engine.types import Point2D
-from app.game.engine.utils import distance, offset, midpoint, get_quadratic_bezier_points
+from app.game.engine.utils import distance, offset, midpoint, get_quadratic_bezier_points, diff
 
 
 class Edge(MovableObject):
@@ -35,3 +35,10 @@ class Edge(MovableObject):
         p1 = Point2D(mid.x + off, mid.y + off)
         points = get_quadratic_bezier_points(p0, p1, p2)
         arcade.draw_commands.draw_line_strip(points, color, width)
+
+    def update(self, x: float, y: float):
+        """Move an object to its new position"""
+        diff_x, diff_y = diff(self.x, self.y, x, y)
+
+        self.x += diff_x
+        self.y += diff_y

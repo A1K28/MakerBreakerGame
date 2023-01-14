@@ -46,15 +46,6 @@ class MakerBreakerGame(arcade.Window):
             nodes = [e for e in self.nodes if e.tag in edge]
             self.create_edge(nodes)
 
-    def draw_graph(self):
-        # draw edges
-        for edge in self.edges:
-            edge.draw()
-
-        # draw nodes
-        for node in self.nodes:
-            node.draw()
-
     def create_edge(self, nodes: List[Node]):
         points = [Point2D(e.point_x, e.point_y) for e in nodes]
         edge = Edge(points, self.node_radius)
@@ -63,6 +54,15 @@ class MakerBreakerGame(arcade.Window):
     def create_node(self, point, tag):
         node = Node(point, tag, self.node_radius, self.font_size)
         self.nodes.append(node)
+
+    def draw_graph(self):
+        # draw edges
+        for edge in self.edges:
+            edge.draw()
+
+        # draw nodes
+        for node in self.nodes:
+            node.draw()
 
     def on_draw(self):
         # pass
@@ -82,16 +82,12 @@ class MakerBreakerGame(arcade.Window):
 
         # arcade.run()
 
-    # Creating function to check the position
-    # of the mouse
     def on_mouse_motion(self, x, y, dx, dy):
-        """
-        Called whenever the mouse moves.
-        """
+        """Called when the mouse moves."""
         self.nodes[0].update(x, y)
 
-    # Creating function to check the mouse clicks
     def on_mouse_press(self, x, y, button, modifiers):
+        """Called when the mouse is pressed"""
         print("Mouse button is pressed")
 
 

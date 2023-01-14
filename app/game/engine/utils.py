@@ -5,19 +5,28 @@ from typing import List
 from app.game.engine.types import Point2D
 
 
-offset = lambda x: 2.5 / 28 * x + 10./7
+def offset(dist: float) -> float:
+    return 2.5 / 28 * dist + 10./7
 
 
 def distance(p1: Point2D, p2: Point2D) -> float:
+    """Find distance between two points on an Euclidian plane"""
     return math.sqrt(abs(p1.x - p2.x) ** 2 + abs(p1.y - p2.y) ** 2)
 
 
 def slope(p1: Point2D, p2: Point2D) -> float:
+    """Find slope between two points an Euclidian plane"""
     return abs(p1.y - p2.y) * 1. / abs(p1.x - p2.x)
 
 
 def midpoint(p1: Point2D, p2: Point2D) -> Point2D:
+    """Find midpoint between two points on an Euclidian plane."""
     return Point2D((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
+
+
+def diff(old_x: float, old_y: float, new_x: float, new_y: float) -> (float, float):
+    """Find difference vector between two points on an Euclidian plane"""
+    return new_x-old_x, new_y-old_y
 
 
 def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_precision=128) -> List[Point2D]:
@@ -29,7 +38,6 @@ def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_preci
 
     B(t) = (1-t)^2*P0 + 2(1-t)t*P1 + t^2*P2
     """
-
     def b(t: float) -> Point2D:
         c0 = (1 - t) ** 2
         c1 = 2 * (1 - t) * t
@@ -52,6 +60,7 @@ def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_preci
 
 def get_distributed_points(width: int, height: int, block_size: int, n_points: int,
                            grid_width: int = 25, grid_height: int = 16):
+    """Returns a list of N unique points uniformly distributed along the grid"""
     # generate unique grid coords
     constraint_x = grid_width
     constraint_y = grid_height
@@ -73,7 +82,3 @@ def get_distributed_points(width: int, height: int, block_size: int, n_points: i
                              e / constraint_x * 1. * block_size + height * 1. / 2 - center_y)
                      for e in random_points_1d]
     return random_points
-
-
-def diff(old_x: float, old_y: float, new_x: float, new_y: float) -> (float, float):
-    return new_x-old_x, new_y-old_y
