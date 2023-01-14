@@ -4,7 +4,7 @@ The Maker Break Game written in Python Arcade with AI enhancements
 ## Visuals
 ![](./media/demo.gif)
 
-The generated hypergraph's nodes are randmoly distributed along the plane and then a 
+The generated Hypergraph's nodes are randomly distributed along the plane and then a 
 [Force-directed](https://en.wikipedia.org/wiki/Force-directed_graph_drawing) algorithm
 is applied to the graph for it to visually self-adjust.
 <br/>
