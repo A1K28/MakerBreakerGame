@@ -58,6 +58,8 @@ class HyperGraph:
         self.color_palette.draw()
 
     def update_color_palette(self, x, y):
+        self.color_palette.vel_x = x
+        self.color_palette.vel_y = y
         self.color_palette.update()
 
     def pre_self_adjust(self):

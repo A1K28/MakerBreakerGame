@@ -4,6 +4,7 @@ from app.game.engine.types import Point2D
 
 
 class SelectableObject:
+    is_selected: bool = False
     color: arcade.csscolor = None
     default_color: arcade.csscolor = None
 

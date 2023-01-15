@@ -8,7 +8,6 @@ from app.game.engine.utils import diff, hypotenuse
 
 class Node(PhysicsObject, SelectableObject):
     def __init__(self, point: Point2D, tag: str, radius: float, color: arcade.csscolor, font_size: int):
-        # self.point = point
         self.tag = tag
         self.radius = radius
         self.color = color
