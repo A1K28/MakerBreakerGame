@@ -10,19 +10,21 @@ from app.game.engine.interface import SelectableObject, PhysicsObject
 
 
 class MakerBreakerGame(arcade.Window):
-    def __init__(self, node_radius=12, font_size=10):
+    def __init__(self, node_radius=12, font_size=10, pre_adjust=False):
         super().__init__(Constants.WIDTH, Constants.HEIGHT, title="Maker Breaker Game")
 
         self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.right_mouse_bound_object: PhysicsObject | None = None
         self.hover_bound_object: SelectableObject | PhysicsObject | None = None
 
+        self.pre_adjust = pre_adjust
         self.setup()
 
     def setup(self):
         arcade.set_background_color(Constants.DARK_BLUE_COLOR)
         self.hypergraph.create_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
-        # self.hypergraph.pre_self_adjust()
+        if self.pre_adjust:
+            self.hypergraph.pre_self_adjust()
 
     def on_draw(self):
         arcade.start_render()
