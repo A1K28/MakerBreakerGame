@@ -1,12 +1,12 @@
 import arcade
 
 from app.game.config.constants import Constants
-from app.game.engine.interface import MovableObject, PhysicsObject, SelectableObject
+from app.game.engine.interface import PhysicsObject, SelectableObject
 from app.game.engine.types import Point2D
-from app.game.engine.utils import diff
+from app.game.engine.utils import diff, hypotenuse
 
 
-class Node(MovableObject, SelectableObject, PhysicsObject):
+class Node(PhysicsObject, SelectableObject):
     def __init__(self, point: Point2D, tag: str, radius: float, color: arcade.csscolor, font_size: int):
         # self.point = point
         self.tag = tag
@@ -19,6 +19,9 @@ class Node(MovableObject, SelectableObject, PhysicsObject):
 
         self.point_x = point.x
         self.point_y = point.y
+
+        self.vel_x = 0
+        self.vel_y = 0
 
         self.text_x = self.point_x - self.radius / 2 + 2
         self.text_y = self.point_y - self.radius / 2 + 2
@@ -42,16 +45,20 @@ class Node(MovableObject, SelectableObject, PhysicsObject):
         """Deselects an object"""
         self.is_selected = False
 
-    def update(self, x: float, y: float):
+    def update(self):
         """Move an object to its new position"""
-        circle_diff_x, circle_diff_y = diff(self.point_x, self.point_y, x, y)
-        text_diff_x, text_diff_y = diff(self.text_x, self.text_y, x, y)
+        circle_dx, circle_dy = diff(self.point_x, self.point_y, self.vel_x, self.vel_y)
+        text_dx, text_dy = diff(self.text_x, self.text_y, self.vel_x, self.vel_y)
 
-        self._apply_force_on_point(circle_diff_x, circle_diff_y, True)
-        self._apply_force_on_text(text_diff_x, text_diff_y, True)
+        dist = hypotenuse(circle_dx, circle_dy)
+        if dist > 1:
+            circle_dx *= Constants.DRAG_CONSTANT
+            circle_dy *= Constants.DRAG_CONSTANT
+            text_dx *= Constants.DRAG_CONSTANT
+            text_dy *= Constants.DRAG_CONSTANT
 
-    def to_point(self) -> Point2D:
-        return Point2D(self.point_x, self.point_y)
+        self._apply_force_on_point(circle_dx, circle_dy, True)
+        self._apply_force_on_text(text_dx, text_dy, True)
 
     def apply_force(self, f_x: float, f_y: float):
         self._apply_force_on_point(f_x, f_y)

@@ -1,12 +1,11 @@
 import arcade
 
-from app.game.engine.types import Point2D
-from app.game.engine.utils import diff
 from app.game.config.constants import Constants
-from app.game.engine.interface import MovableObject, PhysicsObject
+from app.game.engine.interface import PhysicsObject
+from app.game.engine.utils import diff
 
 
-class Star(MovableObject, PhysicsObject):
+class Star(PhysicsObject):
     def __init__(self, x, y, node_radius, inner_radius):
         self.point_x = x
         self.point_y = y
@@ -23,9 +22,6 @@ class Star(MovableObject, PhysicsObject):
 
         self.point_x += diff_x
         self.point_y += diff_y
-
-    def to_point(self) -> Point2D:
-        return Point2D(self.point_x, self.point_y)
 
     def apply_force(self, f_x: float, f_y: float):
         self.point_x = max(self.node_radius, min(self.point_x + f_x, Constants.WIDTH - self.node_radius))

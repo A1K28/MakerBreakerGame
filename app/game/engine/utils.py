@@ -11,12 +11,12 @@ def offset(dist: float) -> float:
 
 
 def hypotenuse(x: float, y: float) -> float:
-    return math.sqrt(x**2+y**2)
+    return math.pow(x*x+y*y, 0.5)
 
 
 def distance(p1: Point2D, p2: Point2D) -> float:
     """Find distance between two points on an Euclidian plane"""
-    return math.sqrt(abs(p1.x - p2.x) ** 2 + abs(p1.y - p2.y) ** 2)
+    return hypotenuse(p1.x-p2.x, p1.y-p2.y)
 
 
 def slope(p1: Point2D, p2: Point2D) -> float:
@@ -37,6 +37,12 @@ def diff(old_x: float, old_y: float, new_x: float, new_y: float) -> (float, floa
 def coulomb_attract(dist: float) -> float:
     """Finds the Coulomb forces acting on an object: |F| = (K * |q1| * |q2|) / (r^2)"""
     return Constants.COULOMB_K * (Constants.COULOMB_Q ** 2) / (dist ** 2)
+
+
+def is_point_inside_rect(point_x, point_y, rect_x, rect_y, rect_w, rect_h, threshold=30) -> bool:
+    """Checks whether a point lies inside a rectangle or not."""
+    return (point_x <= rect_x+rect_w+threshold) and (point_x >= rect_x-threshold) \
+        and (point_y <= rect_y+rect_h+threshold) and (point_y >= rect_y-threshold)
 
 
 def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_precision=128) -> List[Point2D]:

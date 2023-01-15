@@ -3,12 +3,6 @@ import arcade
 from app.game.engine.types import Point2D
 
 
-class MovableObject:
-    def update(self, x: float, y: float):
-        """Move an object to its new position"""
-        pass
-
-
 class SelectableObject:
     color: arcade.csscolor = None
     default_color: arcade.csscolor = None
@@ -26,10 +20,17 @@ class PhysicsObject:
     point_x: float = None
     point_y: float = None
 
-    def to_point(self) -> Point2D:
-        """Transform the object into a Point2D object"""
+    vel_x: float = None
+    vel_y: float = None
+
+    def update(self):
+        """Move an object to its new position"""
         pass
 
-    def apply_force(self, dx: float, dy: float):
+    def apply_force(self, f_x: float, f_y: float):
         """Apply the given force to an object"""
         pass
+
+    def to_point(self) -> Point2D:
+        """Transform the object into a Point2D object"""
+        return Point2D(self.point_x, self.point_y)

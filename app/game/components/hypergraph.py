@@ -3,6 +3,7 @@ from typing import List, Dict
 
 import arcade
 
+from app.game.components.color_palette import ColorPalette
 from app.game.components.hyperedge import HyperEdge
 from app.game.components.node import Node
 from app.game.config.constants import Constants
@@ -22,6 +23,8 @@ class HyperGraph:
         self.nodes: List[Node] = []
         self.edges: List[HyperEdge] = []
         self.node_edge_map: Dict[str, List[HyperEdge]] = {}
+
+        self.color_palette: ColorPalette = ColorPalette(0, 0, self.node_radius)
 
     def create_graph(self, nodes, edges):
         # get random unique node points
@@ -47,6 +50,15 @@ class HyperGraph:
         # draw nodes
         for node in self.nodes:
             node.draw()
+
+    def is_point_on_color_palette(self, x, y) -> bool:
+        return self.color_palette.is_point_inside_palette(x, y)
+
+    def draw_color_palette(self):
+        self.color_palette.draw()
+
+    def update_color_palette(self, x, y):
+        self.color_palette.update()
 
     def pre_self_adjust(self):
         """Use a Force-Directed graph drawing algorithm,
