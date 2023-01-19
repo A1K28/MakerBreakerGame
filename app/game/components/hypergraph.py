@@ -123,7 +123,7 @@ class HyperGraph:
         return self.node_edge_map[node.tag]
 
     def _create_edge(self, nodes: List[Node]):
-        edge = HyperEdge(nodes, self.node_radius, arcade.csscolor.WHITE)
+        edge = HyperEdge(nodes, self.node_radius)
         self.edges.append(edge)
         for node in nodes:
             if node.tag not in self.node_edge_map:
@@ -131,7 +131,7 @@ class HyperGraph:
             self.node_edge_map[node.tag].append(edge)
 
     def _create_node(self, point, tag):
-        node = Node(point, tag, self.node_radius, arcade.csscolor.WHITE, self.font_size)
+        node = Node(point, tag, self.node_radius, self.font_size)
         self.nodes.append(node)
 
     def _get_rectangle_xywh_containing_all_nodes(self) -> (float, float, float, float):

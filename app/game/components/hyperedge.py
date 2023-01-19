@@ -10,14 +10,14 @@ from app.game.engine.utils import distance, offset, midpoint, get_quadratic_bezi
 
 
 class HyperEdge:
-    def __init__(self, nodes: List[Node], node_radius: float, color: arcade.csscolor):
+    def __init__(self, nodes: List[Node], node_radius: float):
         if nodes is None or len(nodes) < 2:
             raise ValueError(f"Invalid point array passed ar argument: {nodes}")
 
         self.nodes = nodes
         self.node_radius = node_radius
-        self.color = color
-        self.default_color = color
+        self.color = Constants.EDGE_COLOR
+        self.default_color = Constants.EDGE_COLOR
 
         # star expansion (for edges with more than 2 endpoints)
         self.star: Star | None = None
@@ -25,24 +25,23 @@ class HyperEdge:
     def draw(self):
         if len(self.nodes) == 2:
             n0, n2 = self.nodes[0], self.nodes[1]
-            self._draw2d(n0.to_point(), n2.to_point(), self.color)
+            self._draw2d(n0.to_point(), n2.to_point())
         else:
             mid = self.nodes[0].to_point()
             for i in range(1, len(self.nodes)):
                 mid = midpoint(mid, self.nodes[i].to_point())
             for node in self.nodes:
-                self._draw2d(node.to_point(), mid, self.color)
+                self._draw2d(node.to_point(), mid)
             self.star = Star(mid.x, mid.y, self.node_radius, 6)
             self.star.draw()
 
-    @staticmethod
-    def _draw2d(p0: Point2D, p2: Point2D, color=arcade.csscolor.WHITE, width=2):
+    def _draw2d(self, p0: Point2D, p2: Point2D):
         dist = distance(p0, p2)
         off = offset(dist)
         mid = midpoint(p0, p2)
         p1 = Point2D(mid.x + off, mid.y + off)
         points = get_quadratic_bezier_points(p0, p1, p2)
-        arcade.draw_commands.draw_line_strip(points, color, width)
+        arcade.draw_commands.draw_line_strip(points, self.color, Constants.EDGE_WIDTH)
 
     def update_with_hooke(self):
         for i in range(len(self.nodes)):

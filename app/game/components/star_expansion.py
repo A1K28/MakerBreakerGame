@@ -13,7 +13,7 @@ class Star(PhysicsObject):
         self.inner_radius = inner_radius
 
     def draw(self):
-        arcade.draw_circle_filled(self.point_x, self.point_y, self.node_radius, Constants.DARK_BLUE_COLOR)
+        arcade.draw_circle_filled(self.point_x, self.point_y, self.node_radius, Constants.BACKGROUND_COLOR)
         arcade.draw_circle_filled(self.point_x, self.point_y, self.inner_radius, arcade.csscolor.TOMATO)
 
     def update(self, x: float, y: float):

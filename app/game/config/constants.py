@@ -5,7 +5,13 @@ class Constants:
     # WIDTH, HEIGHT = arcade.window_commands.get_display_size()
     WIDTH = 1280
     HEIGHT = 720
-    DARK_BLUE_COLOR = (0, 48, 73)
+    NODE_RADIUS = 10
+    EDGE_WIDTH = 1.2
+    NODE_INNER_COLOR = arcade.csscolor.WHITE
+    NODE_OUTER_COLOR = arcade.csscolor.BLACK
+    EDGE_COLOR = arcade.csscolor.BLACK
+    FONT_SIZE = 10
+    BACKGROUND_COLOR = (0, 48, 73)
     INFINITY = float('inf')
     COULOMB_K = 8.988 * (10 ** 5)
     COULOMB_Q = 0.5

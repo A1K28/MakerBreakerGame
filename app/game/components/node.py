@@ -7,14 +7,15 @@ from app.game.engine.utils import diff, hypotenuse
 
 
 class Node(PhysicsObject, SelectableObject):
-    def __init__(self, point: Point2D, tag: str, radius: float, color: arcade.csscolor, font_size: int):
+    def __init__(self, point: Point2D, tag: str, radius: float, font_size: int):
         if len(tag) > 2:
             raise ValueError(f"Tag ({tag}) length is greater than 2")
 
         self.tag = tag
         self.radius = radius
-        self.color = color
-        self.default_color = color
+        self.color = Constants.NODE_INNER_COLOR
+        self.outer_color = Constants.NODE_OUTER_COLOR
+        self.default_color = Constants.NODE_INNER_COLOR
         self.font_size = font_size
 
         self.is_selected: bool = False
@@ -33,7 +34,7 @@ class Node(PhysicsObject, SelectableObject):
 
     def draw(self):
         """Draw the object to screen"""
-        arcade.draw_circle_filled(self.point_x, self.point_y, self.radius, Constants.DARK_BLUE_COLOR)
+        arcade.draw_circle_filled(self.point_x, self.point_y, self.radius, self.outer_color)
         arcade.draw_circle_filled(self.point_x, self.point_y, self.radius-3, self.color)
         # arcade.draw_text(self.tag, self.text_x, self.text_y, font_size=self.font_size, color=arcade.csscolor.BLACK)
 

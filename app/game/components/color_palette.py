@@ -23,7 +23,7 @@ class ColorPalette(PhysicsObject):
     def draw(self):
         rect_x, rect_y = self._get_xy()
         arcade.draw_xywh_rectangle_filled(
-            rect_x, rect_y, self.width, self.height, Constants.DARK_BLUE_COLOR)
+            rect_x, rect_y, self.width, self.height, Constants.BACKGROUND_COLOR)
 
         w, h = self.node_radius*2, self.node_radius*2
         for i, color in enumerate(self.colors):

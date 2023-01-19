@@ -11,7 +11,7 @@ from app.game.views.game_over import GameOverView
 
 
 class GameView(arcade.View):
-    def __init__(self, main_menu_view, node_radius=12, font_size=10, pre_adjust=False):
+    def __init__(self, main_menu_view, pre_adjust=False):
         # super().__init__(Constants.WIDTH, Constants.HEIGHT, title="Maker Breaker Game")
         super().__init__()
 
@@ -21,7 +21,7 @@ class GameView(arcade.View):
         self.makers_nodes = []
         self.breakers_nodes = []
 
-        self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
+        self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, Constants.NODE_RADIUS, Constants.FONT_SIZE)
         self.right_mouse_bound_object: PhysicsObject | SelectableObject | None = None
         self.hover_bound_object: PhysicsObject | SelectableObject | None = None
 
@@ -29,7 +29,7 @@ class GameView(arcade.View):
         self.setup()
 
     def setup(self):
-        arcade.set_background_color(Constants.DARK_BLUE_COLOR)
+        arcade.set_background_color(Constants.BACKGROUND_COLOR)
         self.hypergraph.create_graph(nodes=test_hypergraph['nodes'], edges=test_hypergraph['edges'])
         if self.pre_adjust:
             self.hypergraph.pre_self_adjust()
