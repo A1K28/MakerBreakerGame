@@ -95,7 +95,11 @@ class HyperGraph:
         x, y, w, h = self._get_rectangle_xywh_containing_all_nodes()
         x_hat = Constants.WIDTH*1./2-(2*x+w)*1./2
         y_hat = Constants.HEIGHT*1./2-(2*y+h)*1./2
-        magnitude = 1000./math.log(hypotenuse(x_hat, y_hat))
+        if x_hat == 0 and y_hat == 0:
+            div = math.log(1)
+        else:
+            div = math.log(hypotenuse(x_hat, y_hat))
+        magnitude = 1000. if div < 0.01 else 1000./div
         dx, dy = x_hat*1./magnitude, y_hat*1./magnitude
         for node in self.nodes:
             node.apply_force(dx, dy)
