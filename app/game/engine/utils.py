@@ -45,7 +45,7 @@ def is_point_inside_rect(point_x, point_y, rect_x, rect_y, rect_w, rect_h, thres
         and (point_y <= rect_y+rect_h+threshold) and (point_y >= rect_y-threshold)
 
 
-def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_precision=128) -> List[Point2D]:
+def get_quadratic_bezier_points(p0: Point2D, p1: Point2D, p2: Point2D, max_precision=1) -> List[Point2D]:
     """
     Formulated from https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Quadratic_B%C3%A9zier_curves.
 

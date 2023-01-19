@@ -11,6 +11,9 @@ from app.game.engine.utils import distance, offset, midpoint, get_quadratic_bezi
 
 class HyperEdge:
     def __init__(self, nodes: List[Node], node_radius: float, color: arcade.csscolor):
+        if nodes is None or len(nodes) < 2:
+            raise ValueError(f"Invalid point array passed ar argument: {nodes}")
+
         self.nodes = nodes
         self.node_radius = node_radius
         self.color = color
@@ -20,9 +23,7 @@ class HyperEdge:
         self.star: Star | None = None
 
     def draw(self):
-        if self.nodes is None or len(self.nodes) < 2:
-            raise ValueError(f"Invalid point array passed ar argument: {self.nodes}")
-        elif len(self.nodes) == 2:
+        if len(self.nodes) == 2:
             n0, n2 = self.nodes[0], self.nodes[1]
             self._draw2d(n0.to_point(), n2.to_point(), self.color)
         else:
