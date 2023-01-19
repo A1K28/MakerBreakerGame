@@ -7,11 +7,11 @@ class Constants:
     HEIGHT = 720
     NODE_RADIUS = 10
     EDGE_WIDTH = 1.2
-    NODE_INNER_COLOR = arcade.csscolor.WHITE
-    NODE_OUTER_COLOR = arcade.csscolor.BLACK
-    EDGE_COLOR = arcade.csscolor.BLACK
-    FONT_SIZE = 10
     BACKGROUND_COLOR = (0, 48, 73)
+    NODE_INNER_COLOR = arcade.csscolor.WHITE
+    NODE_OUTER_COLOR = BACKGROUND_COLOR
+    EDGE_COLOR = arcade.csscolor.WHITE
+    FONT_SIZE = 10
     INFINITY = float('inf')
     COULOMB_K = 8.988 * (10 ** 5)
     COULOMB_Q = 0.5
