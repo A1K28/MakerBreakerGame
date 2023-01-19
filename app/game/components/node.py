@@ -37,14 +37,6 @@ class Node(PhysicsObject, SelectableObject):
         arcade.draw_circle_filled(self.point_x, self.point_y, self.radius-3, self.color)
         # arcade.draw_text(self.tag, self.text_x, self.text_y, font_size=self.font_size, color=arcade.csscolor.BLACK)
 
-    def select(self):
-        """Selects an object"""
-        self.is_selected = True
-
-    def deselect(self):
-        """Deselects an object"""
-        self.is_selected = False
-
     def update(self):
         """Move an object to its new position"""
         circle_dx, circle_dy = diff(self.point_x, self.point_y, self.vel_x, self.vel_y)

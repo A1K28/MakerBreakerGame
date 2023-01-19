@@ -10,11 +10,18 @@ class SelectableObject:
 
     def select(self):
         """Selects an object"""
-        pass
+        self.is_selected = True
 
     def deselect(self):
         """Deselects an object"""
-        pass
+        self.is_selected = False
+
+    def has_color_set(self):
+        return self.color != self.default_color
+
+    def set_perm_color(self, color):
+        if not self.has_color_set():
+            self.color = color
 
 
 class PhysicsObject:

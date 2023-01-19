@@ -1,3 +1,5 @@
+import math
+
 import arcade
 
 from app.game.config.constants import Constants
@@ -47,5 +49,14 @@ class ColorPalette(PhysicsObject):
         rect_x, rect_y = self._get_xy()
         return is_point_inside_rect(x, y, rect_x, rect_y, self.width, self.height)
 
-    def _get_xy(self):
+    def get_color_from_pos(self, x, y) -> arcade.csscolor:
+        rect_x, rect_y = self._get_xy()
+        if is_point_inside_rect(x, y, rect_x, rect_y, self.width, self.height, threshold=0):
+            dx = x - rect_x
+            block_width = self.width*1./len(self.colors)
+            return self.colors[math.floor(dx*1. / block_width)]
+        return None
+
+    def _get_xy(self) -> (float, float):
+        """Returns the X & Y coordinates of the rectangle from the bottom left"""
         return self.point_x - self.width*1./2, self.point_y + self.node_radius + self.margin

@@ -2,6 +2,7 @@ import arcade.csscolor
 
 
 class Constants:
+    # WIDTH, HEIGHT = arcade.window_commands.get_display_size()
     WIDTH = 1280
     HEIGHT = 720
     DARK_BLUE_COLOR = (0, 48, 73)

@@ -57,6 +57,9 @@ class HyperGraph:
     def draw_color_palette(self):
         self.color_palette.draw()
 
+    def get_palette_color(self, x, y):
+        return self.color_palette.get_color_from_pos(x, y)
+
     def update_color_palette(self, x, y):
         self.color_palette.vel_x = x
         self.color_palette.vel_y = y
@@ -111,7 +114,7 @@ class HyperGraph:
             self.node_edge_map[node.tag].append(edge)
 
     def _create_node(self, point, tag):
-        node = Node(point, tag, self.node_radius, arcade.csscolor.ORANGE, self.font_size)
+        node = Node(point, tag, self.node_radius, arcade.csscolor.WHITE, self.font_size)
         self.nodes.append(node)
 
     def _get_rectangle_xywh_containing_all_nodes(self) -> (float, float, float, float):
