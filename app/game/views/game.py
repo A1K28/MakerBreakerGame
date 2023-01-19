@@ -17,6 +17,10 @@ class GameView(arcade.View):
 
         self.main_menu_view = main_menu_view
 
+        self.is_makers_turn = True
+        self.makers_nodes = []
+        self.breakers_nodes = []
+
         self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.right_mouse_bound_object: PhysicsObject | SelectableObject | None = None
         self.hover_bound_object: PhysicsObject | SelectableObject | None = None
@@ -37,16 +41,39 @@ class GameView(arcade.View):
         self.hypergraph.self_adjust()
         self.hypergraph.self_center()
 
+        self._draw_next_players_turn_text()
+
         self._draw_color_palette()
         self._draw_right_mouse_bound_obj()
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Called when the mouse moves."""
         # handle mouse bound object
+        self._handle_rmb_object(x, y)
+
+        # handle on-hover
+        self._handle_on_hover(x, y)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """Called when the mouse is pressed"""
+        # left mouse button. pick a color.
+        if button == 1:
+            self._handle_set_color(x, y)
+
+        # right mouse button. move an object.
+        if button == 4:
+            self._handle_set_rmb(x, y)
+
+    # def on_mouse_release(self, x, y, button, modifiers):
+    #     """Called when the mouse is released"""
+    #     if button == 1:
+    #         self.mouse_bound_object = None
+
+    def _handle_rmb_object(self, x, y):
         if self.right_mouse_bound_object is not None:
             self._set_velocity_to_right_mouse_bound_object(x, y)
 
-        # handle on-hover
+    def _handle_on_hover(self, x, y):
         if self.right_mouse_bound_object is not None:
             self.hover_bound_object = self.right_mouse_bound_object
         elif self.hover_bound_object is None or not self.hypergraph.is_point_on_color_palette(x, y):
@@ -57,40 +84,44 @@ class GameView(arcade.View):
             if node is not None and node != self.hover_bound_object:
                 self._set_node_color(node)
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        """Called when the mouse is pressed"""
-        # left mouse button. pick a color.
-        if button == 1:
-            if self.right_mouse_bound_object is None:
-                if self.hover_bound_object is not None:
-                    color = self.hypergraph.get_palette_color(x, y)
-                    if color is not None:
-                        self.hover_bound_object.set_perm_color(color)
+    def _handle_set_color(self, x, y):
+        if self.right_mouse_bound_object is None:
+            if self.hover_bound_object is not None:
+                color = self.hypergraph.get_palette_color(x, y)
+                if color is not None:
+                    self.hover_bound_object.set_perm_color(color)
+                    if self.is_makers_turn:
+                        self.makers_nodes.append(self.hover_bound_object)
+                    else:
+                        self.breakers_nodes.append(self.hover_bound_object)
+                    self.is_makers_turn = not self.is_makers_turn
 
-                        if self._has_destructor_won():
-                            self._game_over("Destructor has won the game!")
-                        if self._has_constructor_won():
-                            self._game_over("Constructor has won the game!")
+                    if self._has_destructor_won():
+                        self._game_over("Destructor has won the game!")
+                    if self._has_constructor_won():
+                        self._game_over("Constructor has won the game!")
 
-        # right mouse button. move an object.
-        if button == 4:
-            if self.right_mouse_bound_object is None:
-                node = self.hypergraph.find_closest_node(x, y)
-                if node is not None:
-                    node.vel_x = x
-                    node.vel_y = y
-                    self.right_mouse_bound_object = node
-                    self.right_mouse_bound_object.select()
-            else:
-                self.right_mouse_bound_object.deselect()
-                self.right_mouse_bound_object = None
-                self._clear_node_color()
-                self.hover_bound_object = None
+    def _handle_set_rmb(self, x, y):
+        if self.right_mouse_bound_object is None:
+            node = self.hypergraph.find_closest_node(x, y)
+            if node is not None:
+                node.vel_x = x
+                node.vel_y = y
+                self.right_mouse_bound_object = node
+                self.right_mouse_bound_object.select()
+        else:
+            self.right_mouse_bound_object.deselect()
+            self.right_mouse_bound_object = None
+            self._clear_node_color()
+            self.hover_bound_object = None
 
-    # def on_mouse_release(self, x, y, button, modifiers):
-    #     """Called when the mouse is released"""
-    #     if button == 1:
-    #         self.mouse_bound_object = None
+    def _draw_next_players_turn_text(self):
+        if self.is_makers_turn:
+            text = "Maker's turn"
+        else:
+            text = "Breaker's turn"
+        arcade.draw_text(text, 50, self.window.height - 50,
+                         arcade.color.HONEYDEW, font_size=16)
 
     def _game_over(self, text):
         game_over_view = GameOverView(self.main_menu_view, text)

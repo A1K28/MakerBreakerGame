@@ -61,7 +61,7 @@ class HyperGraph:
         return self.color_palette.get_color_from_pos(x, y)
 
     def set_palette_colors(self, colors):
-        self.color_palette.colors = colors
+        self.color_palette.set_colors(colors)
 
     def get_available_colors(self, node):
         edges = self.node_edge_map[node.tag]

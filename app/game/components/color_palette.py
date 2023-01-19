@@ -17,7 +17,7 @@ class ColorPalette(PhysicsObject):
         self.padding = padding
         self.margin = margin
         self.colors = Constants.COLOR_PALETTE_LIST
-        self.width = self.node_radius * 2. * 3 + self.padding * (len(self.colors) + 1)
+        self.width = self.node_radius * 2. * len(self.colors) + self.padding * (len(self.colors) + 1)
         self.height = self.node_radius * 2. + self.padding * 2
 
     def draw(self):
@@ -48,6 +48,10 @@ class ColorPalette(PhysicsObject):
     def is_point_inside_palette(self, x, y) -> bool:
         rect_x, rect_y = self._get_xy()
         return is_point_inside_rect(x, y, rect_x, rect_y, self.width, self.height)
+
+    def set_colors(self, colors):
+        self.colors = colors
+        self.width = self.node_radius * 2. * len(self.colors) + self.padding * (len(self.colors) + 1)
 
     def get_color_from_pos(self, x, y) -> arcade.csscolor:
         rect_x, rect_y = self._get_xy()
