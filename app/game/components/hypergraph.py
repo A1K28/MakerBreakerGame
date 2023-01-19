@@ -60,6 +60,19 @@ class HyperGraph:
     def get_palette_color(self, x, y):
         return self.color_palette.get_color_from_pos(x, y)
 
+    def set_palette_colors(self, colors):
+        self.color_palette.colors = colors
+
+    def get_available_colors(self, node):
+        edges = self.node_edge_map[node.tag]
+        illegal_colors = set()
+        for edge in edges:
+            for _node in edge.nodes:
+                if _node == node:
+                    continue
+                illegal_colors.add(_node.color)
+        return [color for color in Constants.COLOR_PALETTE_LIST if color not in illegal_colors]
+
     def update_color_palette(self, x, y):
         self.color_palette.vel_x = x
         self.color_palette.vel_y = y

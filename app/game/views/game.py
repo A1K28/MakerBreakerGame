@@ -7,11 +7,15 @@ from app.game.components.hypergraph import HyperGraph
 from app.game.config.constants import Constants
 from app.game.engine.data import test_hypergraph
 from app.game.engine.interface import SelectableObject, PhysicsObject
+from app.game.views.game_over import GameOverView
 
 
-class MakerBreakerGame(arcade.Window):
-    def __init__(self, node_radius=12, font_size=10, pre_adjust=False):
-        super().__init__(Constants.WIDTH, Constants.HEIGHT, title="Maker Breaker Game", fullscreen=False)
+class GameView(arcade.View):
+    def __init__(self, main_menu_view, node_radius=12, font_size=10, pre_adjust=False):
+        # super().__init__(Constants.WIDTH, Constants.HEIGHT, title="Maker Breaker Game")
+        super().__init__()
+
+        self.main_menu_view = main_menu_view
 
         self.hypergraph = HyperGraph(Constants.WIDTH, Constants.HEIGHT, node_radius, font_size)
         self.right_mouse_bound_object: PhysicsObject | SelectableObject | None = None
@@ -63,6 +67,11 @@ class MakerBreakerGame(arcade.Window):
                     if color is not None:
                         self.hover_bound_object.set_perm_color(color)
 
+                        if self._has_destructor_won():
+                            self._game_over("Destructor has won the game!")
+                        if self._has_constructor_won():
+                            self._game_over("Constructor has won the game!")
+
         # right mouse button. move an object.
         if button == 4:
             if self.right_mouse_bound_object is None:
@@ -83,15 +92,34 @@ class MakerBreakerGame(arcade.Window):
     #     if button == 1:
     #         self.mouse_bound_object = None
 
+    def _game_over(self, text):
+        game_over_view = GameOverView(self.main_menu_view, text)
+        self.window.show_view(game_over_view)
+
+    def _has_destructor_won(self):
+        for node in self.hypergraph.nodes:
+            if not node.has_color_set() and not len(self.hypergraph.get_available_colors(node)):
+                return True
+        return False
+
+    def _has_constructor_won(self):
+        for node in self.hypergraph.nodes:
+            if not node.has_color_set():
+                return False
+        return True
+
     def _draw_right_mouse_bound_obj(self):
         if self._can_draw_right_mouse_bound_obj():
             self.right_mouse_bound_object.update()
 
     def _draw_color_palette(self):
         if self._can_draw_color_palette():
-            self.hypergraph.draw_color_palette()
-            self.hypergraph.update_color_palette(self.hover_bound_object.point_x,
-                                                 self.hover_bound_object.point_y)
+            available_colors = self.hypergraph.get_available_colors(self.hover_bound_object)
+            if len(available_colors):
+                self.hypergraph.set_palette_colors(available_colors)
+                self.hypergraph.draw_color_palette()
+                self.hypergraph.update_color_palette(self.hover_bound_object.point_x,
+                                                     self.hover_bound_object.point_y)
 
     def _can_draw_right_mouse_bound_obj(self):
         return self.right_mouse_bound_object is not None
@@ -123,8 +151,3 @@ class MakerBreakerGame(arcade.Window):
         for edge in self.hypergraph.get_edges(self.hover_bound_object):
             edge.color = arcade.csscolor.VIOLET
         self._set_position_to_color_palette(node.point_x, node.point_y)
-
-
-if __name__ == '__main__':
-    game = MakerBreakerGame()
-    arcade.run()
