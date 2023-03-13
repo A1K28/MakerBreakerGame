@@ -1,5 +1,5 @@
 # MakerBreakerGame
-The Maker Break Game written in Python Arcade with AI enhancements
+The Maker Break Game written in Python Arcade.
 
 ## Visuals
 ![](./media/demo.gif)
